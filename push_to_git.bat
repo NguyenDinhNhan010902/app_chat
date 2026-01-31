@@ -11,6 +11,13 @@ if exist "app-chat\.git" (
     rmdir /s /q "app-chat\.git"
 )
 
+:: 0b. Remove cached submodule if exists (Fix 404 error)
+git ls-files -s app-chat | findstr "^160000" >nul
+if %errorlevel% equ 0 (
+    echo [INFO] Detected broken submodule link. Fixing...
+    git rm --cached app-chat
+)
+
 :: 1. Initialize Git if needed
 if not exist .git (
     echo [INFO] Initializing Git repository in root...
